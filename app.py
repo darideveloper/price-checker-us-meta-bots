@@ -8,6 +8,8 @@ load_dotenv ()
 app = Flask(__name__)
 
 WP_WEBOOK_TOKEN = os.getenv ('WP_WEBOOK_TOKEN')
+MSG_WEBOOK_TOKEN = os.getenv ("MSG_WEBOOK_TOKEN")
+META_TOKENS = [WP_WEBOOK_TOKEN, MSG_WEBOOK_TOKEN]
 
 @app.get ('/')
 def index ():
@@ -31,7 +33,7 @@ def webhook_subscribe ():
     if hub_mode == "subscribe": 
     
         # Validate token
-        if hub_verify_token != WP_WEBOOK_TOKEN:
+        if hub_verify_token not in META_TOKENS:
             return ({
                 "status": "error",
                 "message": "invalid token",
@@ -46,7 +48,7 @@ def webhook_subscribe ():
         "data": []
     }, 400)
 
-@app.post ('/webhook/')
+@app.post ('/wp-webhook/')
 def message ():
     
     # Get all post data
