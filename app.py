@@ -1,7 +1,8 @@
 import os
 from flask import Flask, request
 from dotenv import load_dotenv
-from sender import send_message
+from sender import send_message_msg, send_message_wp
+from workflow import workflow
 
 load_dotenv ()
 
@@ -48,34 +49,56 @@ def webhook_subscribe ():
         "data": []
     }, 400)
 
-@app.post ('/wp-webhook/')
+@app.post ('/webhook/')
 def message ():
     
     # Get all post data
     data = request.get_json ()
     
-    # Get message data
-    try:
-        message_data = data["entry"][0]["changes"][0]["value"]["messages"][0]
-        message_phone = message_data["from"]
-        message_text = message_data["text"]["body"]
-    except Exception as e:
-        return ({
-            "status": "error",
-            "message": "invalid request",
-            "data": []
-        }, 200)
+    # Detect if is msg or wp message
+    source = "wp"
+    entry = data["entry"][0]
+    if entry.get ("messaging", ""):
+        source = "msg"
         
-    # Fix phone number format
-    if message_phone.startswith ("521"):
-        message_phone = message_phone.replace ("521", "52")
     
-    # Send message
-    try:
-        send_message(message_phone, message_text)
-    except Exception as e:
-        pass
+    # Default error
+    error_response = ({
+        "status": "error",
+        "message": "invalid request",
+        "data": []
+    }, 200)
     
+    if source == "wp":
+        
+        # Get message data
+        try:
+            message_data = entry["changes"][0]["value"]["messages"][0]
+            message_phone = message_data["from"]
+            message_text = message_data["text"]["body"]
+        except Exception as e:
+            return error_response
+            
+        # Fix phone number format
+        if message_phone.startswith ("521"):
+            message_phone = message_phone.replace ("521", "52")
+        
+        # Send message
+        workflow (message_phone, message_text, send_message_wp)
+        
+    elif source == "msg":
+        
+        # Get message data
+        try:
+            message_data = entry["messaging"][0]
+            message_sender = message_data["sender"]["id"]
+            message_text = message_data["message"]["text"]
+        except Exception as e:
+            return error_response
+            
+        # Send message
+        workflow (message_sender, message_text, send_message_msg)
+        
     return {
         "status": "success",
         "message": "message sent",
