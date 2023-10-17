@@ -12,6 +12,7 @@ app = Flask(__name__)
 WP_WEBOOK_TOKEN = os.getenv ('WP_WEBOOK_TOKEN')
 MSG_WEBOOK_TOKEN = os.getenv ("MSG_WEBOOK_TOKEN")
 META_TOKENS = [WP_WEBOOK_TOKEN, MSG_WEBOOK_TOKEN]
+PORT = int(os.environ.get('PORT', 5000))
 
 @app.get ('/')
 def index ():
@@ -106,4 +107,4 @@ def message ():
     return ("EVENT_RECEIVED", 200)
     
 if __name__ == "__main__":
-    app.run (port=5000)
+    app.run (port=PORT)
