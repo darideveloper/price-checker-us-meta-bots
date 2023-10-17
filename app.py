@@ -98,12 +98,9 @@ def message ():
             
         # Send message
         workflow (message_sender, message_text, send_message_msg)
-        
-    return {
-        "status": "success",
-        "message": "message sent",
-        "data": []
-    }
+    
+    # Confirm message
+    return ("EVENT_RECEIVED", 200)
     
 if __name__ == "__main__":
     app.run (port=5000)
