@@ -19,8 +19,8 @@ def workflow (send_to:str, message:str, send_function:callable):
             keyword = keyword.replace (char, " ")
             
         # Connect to price checker
-        price_checker = PriceChaker ()
-        keyword_sent = price_checker.post_keyword (keyword)
+        price_checker = PriceChaker (keyword)
+        keyword_sent = price_checker.post_keyword ()
         if not keyword_sent:
             send_function (send_to, error_message)
             return None

@@ -40,7 +40,7 @@ class PriceChaker ():
             
             # Get request id
             self.request_id = res.json () ["data"]["request-id"]
-            return False
+            return True
         else:
             return False
 
