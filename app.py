@@ -1,4 +1,5 @@
 import os
+from threading import Thread
 from flask import Flask, request
 from dotenv import load_dotenv
 from sender import send_message_msg, send_message_wp
@@ -84,7 +85,8 @@ def message ():
             message_phone = message_phone.replace ("521", "52")
         
         # Send message
-        workflow (message_phone, message_text, send_message_wp)
+        workflow_thread = Thread (target=workflow, args=(message_phone, message_text, send_message_wp))
+        workflow_thread.start ()
         
     elif source == "msg":
         
@@ -97,7 +99,8 @@ def message ():
             return error_response
             
         # Send message
-        workflow (message_sender, message_text, send_message_msg)
+        workflow_thread = Thread (target=workflow, args=(message_sender, message_text, send_message_msg))
+        workflow_thread.start ()        
     
     # Confirm message
     return ("EVENT_RECEIVED", 200)
