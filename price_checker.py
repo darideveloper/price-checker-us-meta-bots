@@ -59,7 +59,7 @@ class PriceChaker ():
             "api-key": API_KEY
         })
 
-        res = requests.request("GET", url, headers=self.headers, data=payload)
+        res = requests.request("POST", url, headers=self.headers, data=payload)
 
         # validate response
         if res.status_code == 200:
