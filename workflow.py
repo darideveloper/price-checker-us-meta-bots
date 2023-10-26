@@ -1,5 +1,5 @@
 from time import sleep
-from price_checker import PriceChaker
+from api import Api
 
 def workflow (send_to:str, message:str, send_function:callable):
     
@@ -19,8 +19,8 @@ def workflow (send_to:str, message:str, send_function:callable):
             keyword = keyword.replace (char, " ")
             
         # Connect to price checker
-        price_checker = PriceChaker (keyword)
-        keyword_sent = price_checker.post_keyword ()
+        api = Api (keyword)
+        keyword_sent = api.post_keyword ()
         if not keyword_sent:
             send_function (send_to, error_message)
             return None
@@ -31,7 +31,7 @@ def workflow (send_to:str, message:str, send_function:callable):
             sleep (15)
             
             # Get scraping status
-            scraping_status = price_checker.get_status ()
+            scraping_status = api.get_status ()
             
             # Detect errors
             if not scraping_status:
@@ -43,7 +43,7 @@ def workflow (send_to:str, message:str, send_function:callable):
                 break
         
         # Get preview url
-        preview_url = price_checker.get_preview ()
+        preview_url = api.get_preview ()
         preview_message += preview_url
         send_function (send_to, preview_message)
         

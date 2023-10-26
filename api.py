@@ -8,7 +8,7 @@ load_dotenv ()
 HOST = os.getenv ("PRICE_CHECKER_HOST")
 API_KEY = os.getenv ("PRICE_CHECKER_API_KEY")
 
-class PriceChaker ():
+class Api ():
     
     def __init__ (self, keyword:str):
          
