@@ -6,7 +6,7 @@ def workflow (send_to:str, message:str, send_function:callable):
     basic_message = 'Hi! Introduce the keyword like this exact format example: "Keyword=plant based protein"'
     wait_message = "We are obtaining the real-time prices for you right now. The process might take around 2 minutes! Hold on!"
     error_message = "Meta is not working correctly right now. Please try again later!"
-    preview_message = "Here are the results: "
+    preview_message = "Grab here your comparative (ultra-safe link 🔒): \n\n"
     
     # Send basic or wait message
     if "=" in message:
